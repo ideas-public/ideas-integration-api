@@ -1,0 +1,97 @@
+import groovy.io.FileType
+
+project(":ideas-public-api-beta-gen") {
+
+    println "${name} library version: ${version}"
+
+    sourceCompatibility = 11
+    targetCompatibility = 11
+
+    apply plugin: "org.openapi.generator"
+
+    def apiSpecsDir = "${project(":ideas-public-api-beta-gen").projectDir}/src/main/resources/public/specs/".toString()
+    def apiSpecsList = []
+
+    def dir = new File(apiSpecsDir)
+    dir.eachFileRecurse(FileType.FILES) { file ->
+        if (file.getName().endsWith(".yaml"))
+            apiSpecsList << file
+    }
+
+    // Iterate on all specs files
+    apiSpecsList.each {
+        def apiName = it.getName().replace(".yaml", "")
+        def buildApiClient = task "buildApiClientFor${apiName}"(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+            generatorName = "spring"
+            inputSpec = "${apiSpecsDir}${apiName}.yaml".toString()
+            outputDir = "$buildDir/ideas-public-api-client".toString()
+            groupId = "$project.group"
+            id = "$project.name-${apiName}-client".toString()
+            version = "$project.version"
+            apiPackage = "com.ideas.ngi.ideas.client.${apiName}".toString()
+            invokerPackage = "com.ideas.ngi.ideas.client.invoker".toString()
+            modelPackage = "com.ideas.ngi.ideas.client.${apiName}.model".toString()
+            enablePostProcessFile = true
+            skipOverwrite = true
+            configOptions = [
+                    dateLibrary  : "java8-localdatetime",
+                    library      : "spring-cloud",
+                    configPackage: "com.ideas.ngi.ideas.client.configuration"
+            ]
+        }
+
+        task "generateCode${apiName}"(type: Copy, dependsOn: [buildApiClient]) {
+            def srcPath = "$buildDir/${apiName}-client".toString()
+            def targetPath = "$project.projectDir.path/docs/${apiName}".toString()
+
+            // copy docs
+            from(srcPath + "/docs")
+            into(targetPath)
+            include("*.md")
+
+        }
+
+        // code will be generated during compilation
+        compileJava.dependsOn "generateCode${apiName}"
+
+        // attach the generated folder as source for this project
+        sourceSets {
+            main {
+                java {
+                    srcDir "$buildDir/${apiName}-client/src/main/java"
+                    srcDir "$buildDir/invoker"
+                }
+            }
+        }
+    }
+
+    task "moveInvokerAboveApiLevel" {
+        doLast {
+            def srcPathInvoker = "$buildDir/ideas-public-api-client/src/main/java/com/ideas/ngi/ideas/client/".toString()
+            def targetPathInvoker = "$buildDir/invoker/com/ideas/ngi/ideas/".toString()
+
+            ant.move file: srcPathInvoker, todir: targetPathInvoker, failonerror: false
+        }
+    }
+    compileJava.dependsOn "moveInvokerAboveApiLevel"
+
+    dependencies {
+        testImplementation platform("org.spockframework:spock-bom:2.0-groovy-3.0")
+        testImplementation "org.spockframework:spock-core"
+        testImplementation "org.spockframework:spock-spring"
+    }
+
+    openApiValidate {
+        inputSpec = apiSpecsDir
+        recommend = true
+    }
+
+    clean.doFirst {
+        println "Deleting generated markdown docs..."
+        delete "$project.projectDir.path/docs"
+    }
+
+    jar {
+        enabled = true
+    }
+}

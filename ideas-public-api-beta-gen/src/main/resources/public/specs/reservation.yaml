@@ -1,0 +1,545 @@
+openapi: 3.0.1
+info:
+  title: IDeaS Reservations API
+  description: >-
+    API for creating reservations
+  version: v1
+paths:
+  /api/public/reservation/v1:
+    post:
+      tags:
+        - IDeaSReservationV1
+      summary: save reservations
+      description : some description here...
+      operationId: saveReservations
+      requestBody:
+        description: Reservations to save
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/IDeaSReservation'
+              minItems: 1
+            examples:
+              placeholderExample:
+                $ref: '#/components/examples/placeholderReservationExample'
+
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            '*/*':
+              schema:
+                $ref: 'common.yaml#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: 'common.yaml#/components/schemas/ApiError'
+components:
+  schemas:
+    IDeaSReservation:
+      type: object
+      required:
+        - reservationId
+        - clientCode
+        - propertyCode
+        - bookingDate
+        - status
+        - roomStays
+        - numberOfRooms
+        - lastModifiedDate
+        - channel
+      properties:
+        bookingDate:
+          type: string
+          description: date of the booking
+          format: date-time
+        cancellationDate:
+          type: string
+          description: date reservation was cancelled
+          format: date-time
+        cancellationId:
+          type: string
+          description: cancellation id
+          format: string
+        cancellationReason:
+          type: string
+          description: reason reservation was cancelled
+          format: string
+        channel:
+          type: string
+          description: booking channel reservation was made with
+          format: string
+        clientCode:
+          type: string
+          description: client code associated with reservation
+          format: string
+        confirmationNumber:
+          type: string
+          description: confirmation number of the reservation
+          format: string
+        correlationId:
+          type: string
+          description: TODO REMOVE?
+          format: TODO REMOVE?
+        createDate:
+          type: string
+          format: date-time
+          description: TODO REMOVE?
+        customerValue:
+          type: string
+          description: TODO
+          format: TODO
+        earliestArrivalDate:
+          type: string
+          format: date
+          description: TODO REMOVE?
+        lastModifiedDate:
+          type: string
+          format: date-time
+          description: TODO REMOVE?
+        latestDepartureDate:
+          type: string
+          format: date
+          description: TODO REMOVE?
+        multiReservationId:
+          type: string
+          description: TODO
+          format: TODO
+        nationality:
+          type: string
+          description: nation booking was made in
+          format: string
+        numberOfRooms:
+          type: integer
+          format: int32
+          description: number of rooms in reservation
+        previousSharers:
+          type: array
+          items:
+            type: string
+          description: previous sharers in reservations
+          format: TODO
+        isPrimary:
+          type: boolean
+          description: TODO REMOVE?
+          format: TODO REMOVE?
+        profileId:
+          type: string
+          description: id of profile associated with this reservation
+          format: string
+        propertyCode:
+          type: string
+          description: property code associated with this reservation
+          format: string
+        reservationId:
+          type: string
+          description: id of reservation
+          format: string
+        roomStays:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomStay'
+        profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Profile'
+        sharers:
+          type: array
+          items:
+            type: string
+          description: list of sharers
+          format: string
+        statisticsCorrelationId:
+          type: string
+          description: TODO REMOVE?
+          format: TODO REMOVE?
+        status:
+          type: string
+          enum:
+            - RESERVED
+            - CANCELLED
+            - IN_HOUSE
+            - CHECKED_OUT
+            - NO_SHOW
+            - NA
+          description: status of reservation
+          format: enum
+        stayRevenue:
+          $ref: '#/components/schemas/StayRevenue'
+        tempLookupId:
+          type: string
+          description: TODO
+          format: TODO REMOVE?
+        versionId:
+          type: integer
+          description: TODO
+          format: int64
+    RoomStay:
+      type: object
+      required:
+        - rates
+        - arrivalDate
+        - departureDate
+      properties:
+        analyticalMarketSegmentCode:
+          type: string
+          description: TODO
+          format: TODO
+        arrivalDate:
+          type: string
+          format: date
+          description: TODO
+        bookedAccomTypeCode:
+          type: string
+          description: TODO
+          format: TODO
+        bookingType:
+          type: string
+          description: TODO
+          format: TODO
+        currencyExchangeId:
+          type: string
+          description: TODO
+          format: TODO
+        departureDate:
+          type: string
+          format: date
+          description: TODO
+        fromPrimary:
+          type: boolean
+          description: TODO
+          format: TODO
+        invBlockCode:
+          type: string
+          description: TODO
+          format: TODO
+        invTypeCode:
+          type: string
+          description: TODO
+          format: TODO
+        marketCode:
+          type: string
+          description: TODO
+          format: TODO
+        numberOfAdults:
+          type: integer
+          format: int32
+          description: TODO
+        numberOfChildren:
+          type: integer
+          format: int32
+          description: TODO
+        originalCurrencyCode:
+          type: string
+          description: TODO
+          format: TODO
+        rateCode:
+          type: string
+          description: TODO
+          format: TODO
+        rates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rate'
+        revenue:
+          $ref: '#/components/schemas/Revenue'
+        roomNumber:
+          type: string
+          description: TODO
+          format: TODO
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+        sourceBookingCode:
+          type: string
+          description: TODO
+          format: TODO
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+          description: TODO
+          format: TODO
+        profileType:
+          type: string
+          enum:
+            - GUEST
+            - COMPANY
+            - AGENT
+          description: TODO
+          format: TODO
+        context:
+          type: string
+          description: TODO
+          format: TODO
+        name:
+          type: string
+          description: TODO
+          format: TODO
+    StayRevenue:
+      type: object
+      properties:
+        daily:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyRevenue'
+        stayMessageIds:
+          type: array
+          items:
+            type: string
+          description: TODO
+          format: TODO
+        summary:
+          $ref: '#/components/schemas/Revenue'
+    Service:
+      type: object
+      required:
+        - serviceName
+        - serviceValue
+        - inclusive
+        - roomRevenuePackage
+        - reservationPackage
+        - startDate
+        - endDate
+      properties:
+        endDate:
+          type: string
+          format: date
+          description: TODO
+        inclusionType:
+          type: string
+          enum:
+            - INCLUDE
+            - SEPARATE
+            - COMBINED
+            - OTHER
+          description: TODO
+          format: TODO
+        inclusive:
+          type: boolean
+          description: TODO
+          format: TODO
+        reservationPackage:
+          type: boolean
+          description: TODO
+          format: TODO
+        roomRevenuePackage:
+          type: boolean
+          description: TODO
+          format: TODO
+        serviceName:
+          type: string
+          description: TODO
+          format: TODO
+        serviceValue:
+          type: number
+          description: TODO
+          format: TODO
+        startDate:
+          type: string
+          format: date
+          description: TODO
+    DailyRevenue:
+      type: object
+      properties:
+        beverageRevenue:
+          type: number
+          description: TODO
+          format: TODO
+        foodRevenue:
+          type: number
+          description: TODO
+          format: TODO
+        otherRevenue:
+          type: number
+          description: TODO
+          format: TODO
+        roomRevenue:
+          type: number
+          description: TODO
+          format: TODO
+        totalRevenue:
+          type: number
+          description: TODO
+          format: TODO
+        transactionDate:
+          type: string
+          format: date
+    Revenue:
+      type: object
+      properties:
+        beverageRevenue:
+          type: number
+          description: TODO
+          format: TODO
+        foodRevenue:
+          type: number
+          description: TODO
+          format: TODO
+        otherRevenue:
+          type: number
+          description: TODO
+          format: TODO
+        roomRevenue:
+          type: number
+          description: TODO
+          format: TODO
+        totalRevenue:
+          type: number
+          description: TODO
+          format: TODO
+    Rate:
+      type: object
+      required:
+        - rateValue
+        - startDate
+        - endDate
+      properties:
+        currencyExchangeId:
+          type: string
+          description: TODO
+          format: TODO
+        endDate:
+          type: string
+          format: date
+          description: TODO
+        grossRate:
+          type: number
+          description: TODO
+          format: TODO
+        originalCurrencyCode:
+          type: string
+          description: TODO
+          format: TODO
+        rateValue:
+          type: number
+          description: TODO
+          format: TODO
+        startDate:
+          type: string
+          format: date
+          description: TODO
+
+  examples:
+    placeholderReservationExample:
+      value:
+        - lastModifiedDate: "2022-01-01T12:23:34Z"
+          isPrimary: true
+          bookingDate: "2022-01-01T12:23:34Z"
+          cancellationDate: "2022-01-01T12:23:44Z"
+          cancellationId: "ABC123"
+          cancellationReason: "Event was cancelled"
+          channel: "Expedia"
+          clientCode: "WHG"
+          confirmationNumber: "ABC123"
+          nationality: "US"
+          numberOfRooms: 3
+          previousSharers: ["ABC", "123"]
+          profileId: "987ABC"
+          propertyCode: "SAND02CN"
+          reservationId: "TEST_IDEAS_API_1"
+          roomStays:
+            - analyticalMarketSegmentCode: "MS_AMS"
+              arrivalDate: "2022-08-20"
+              bookedAccomTypeCode: "bookedRT"
+              bookingType: "bkTy"
+              currencyExchangeId: "1"
+              departureDate: "2022-08-21"
+              fromPrimary: true
+              invBlockCode: "Grp1"
+              invTypeCode: "RT"
+              marketCode: "MS"
+              numberOfAdults: "1"
+              numberOfChildren: "2"
+              originalCurrencyCode: "USD"
+              rateCode: "RC1"
+              rates:
+                - currencyExchangeId: "1"
+                  endDate: "2022-08-21"
+                  grossRate: "100.25"
+                  originalCurrencyCode: "USD"
+                  rateValue: "100.45"
+                  startDate: "2022-08-20"
+              revenue:
+                beverageRevenue: "100.25"
+                foodRevenue: "200.25"
+                otherRevenue: "300.25"
+                roomRevenue: "400.25"
+                totalRevenue: "500.25"
+              roomNumber: "100"
+              sourceBookingCode: "srcBkCd"
+          profiles:
+            - id: "1"
+              profileType: "COMPANY"
+              context: "profContext"
+              name: "profName"
+          sharers: ["123", "ABC"]
+          status: "RESERVED"
+          stayRevenue:
+            daily:
+              - beverageRevenue: "100.25"
+                foodRevenue: "200.25"
+                otherRevenue: "300.25"
+                roomRevenue: "400.25"
+                totalRevenue: "500.25"
+                transactionDate: "2022-08-20"
+            stayMessageIds: ["12234", "12334"]
+            summary:
+              beverageRevenue: "777.25"
+              foodRevenue: "777.35"
+              otherRevenue: "777.45"
+              roomRevenue: "777.55"
+              totalRevenue: "777.65"
+          daily:
+            beverageRevenue: "100.25"
+            foodRevenue: "200.25"
+            otherRevenue: "300.25"
+            roomRevenue: "400.25"
+            totalRevenue: "500.25"
+            transactionDate: "2022-08-20"
+            stayMessageIds: [ "12234", "12334" ]
+            summary:
+              beverageRevenue: "777.25"
+              foodRevenue: "777.35"
+              otherRevenue: "777.45"
+              roomRevenue: "777.55"
+              totalRevenue: "777.65"
+          tempLookupId: "1001"
+          versionId: "2001"
+
+  securitySchemes:
+    oAuth2ClientCredentialsStage:
+      type: oauth2
+      description: description
+      flows:
+        clientCredentials:
+          tokenUrl: https://fds.ideasrms.com/api/uis/internal_m2m/oauth2/token
+          scopes:
+            write: allows modifying resources
+            read: allows reading resources
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: description
+      flows:
+        clientCredentials:
+          tokenUrl: https://fds.ideasrms.com/api/uis/internal_m2m/oauth2/token
+          scopes:
+            write: allows modifying resources
+            read: allows reading resources
+
+security:
+  - oAuth2ClientCredentialsStage:
+      - read
+      - write
+  - oAuth2ClientCredentials:
+      - read
+      - write

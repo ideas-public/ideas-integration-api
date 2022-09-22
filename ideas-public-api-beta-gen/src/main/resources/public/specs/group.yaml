@@ -1,0 +1,524 @@
+openapi: 3.0.1
+info:
+  title: IDeaS Group Block Master API
+  description: >-
+    IDeaS Group Block Master API
+  contact:
+    name: IDeaS Dev
+  version: v1
+paths:
+  '/api/public/group/v1':
+    post:
+      tags:
+        - IDeaSGroupBlockMasterV1
+      summary: 'save collection of group block masters'
+      description: 'In success case, Http Code 202 will be returned'
+      operationId: saveGroupBlockMasters
+      requestBody:
+        description: GroupBlockMasters to save
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "array"
+              items:
+                $ref: '#/components/schemas/IDeaSGroupBlockMaster'
+            examples:
+              SampleGroupDefinite:
+                $ref: '#/components/examples/SampleGroupDefiniteExample'
+              SampleGroupCancelled:
+                $ref: '#/components/examples/SampleGroupCancelledExample'
+      responses:
+        '202':
+          description: Group Block Master posted
+          content: { }
+        '400':
+          description: Bad request
+          content:
+            '*/*':
+              schema:
+                $ref: 'common.yaml#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: 'common.yaml#/components/schemas/ApiError'
+components:
+  schemas:
+    GroupBlockDetail:
+      type: object
+      required:
+        # - Rate values required
+        - occupancyDate
+        - roomTypeCode
+        - blocks
+        - pickup
+        - originalBlocks
+        - originalCurrencyCode
+      properties:
+        occupancyDate:
+          type: string
+          description: occupancy date
+        roomTypeCode:
+          type: string
+          description: room type code
+        blocks:
+          type: number
+          description: number of blocks
+        ## TODO provide better descriptions
+        pickup:
+          type: number
+          description: pickup
+        ## TODO Question about difference between blocks and original blocks. Should we add description in documentation?
+        ## TODO provide better descriptions
+        originalBlocks:
+          type: number
+          description: original blocks
+        ## TODO verify difference between occupancy and rate objects, provide rate/occupancy examples
+        ## TODO one of rate or doublerate required
+        rate:
+          type: number
+          description: rate
+        ## TODO provide better descriptions
+        twoPersonRate:
+          type: number
+          description: double rate
+        ## TODO provide better descriptions
+        ## TODO Keep these (triple, quad) optional
+        threePersonRate:
+          type: number
+          description: triple rate
+        ## TODO Abhijeet/Nastya to provide better descriptions
+        fourPersonRate:
+          type: number
+          description: quad rate
+        singlePersonOccupancy:
+          type: number
+          description: single occupancy
+        twoPersonOccupancy:
+          type: number
+          description: double occupancy
+        threePersonOccupancy:
+          type: number
+          description: triple occupancy
+        fourPersonOccupancy:
+          type: number
+          description: quad occupancy
+        originalCurrencyCode:
+          type: string
+          description: original currency code
+        extraAdultRate:
+          type: number
+          description: extra rate
+        extraChildRate:
+          type: number
+          description: extra child rate
+    Service:
+      # TODO will investigate further
+      type: object
+      required:
+        - serviceName
+        - serviceValue
+        - inclusive
+        - roomRevenuePackage
+        - startDate
+        - endDate
+      properties:
+        serviceName:
+          type: string
+          description: service name
+        serviceValue:
+          type: number
+          description: service value
+        inclusive:
+          type: boolean
+          description: inclusive
+        # TODO better description
+        inclusionType:
+          type: string
+          enum:
+            - INCLUDE
+            - SEPARATE
+            - COMBINED
+            - OTHER
+          description: inclusion type
+        # TODO better description
+        roomRevenuePackage:
+          type: boolean
+          description: room revenue package
+        startDate:
+          type: string
+          format: date
+          description: start date
+        endDate:
+          type: string
+          format: date
+          description: end date
+    IDeaSGroupBlockMaster:
+      type: object
+      required:
+        - clientCode
+        - propertyCode
+        - code
+        - name
+        - marketSegmentCode
+        - startDate
+        - endDate
+        - groupTypeCode
+        - groupBlocks
+        # TODO required: bookingDate/Time, cancellationDateTime optional, cutoffDays cutoffDate, pickupType, salesPersonName optional, groupStatusCOde
+      properties:
+
+        clientCode:
+          type: string
+          description: client code
+        propertyCode:
+          type: string
+          description: property code
+        correlationId:
+          type: string
+          description: unique id associated with this object
+        statisticsCorrelationId:
+          type: string
+          description: id to associate the group record to a set of statistics data
+        # TODO rename to blockCode or groupCode
+        code:
+          type: string
+          description: group block code
+        action:
+          type: string
+          description: action associated with group block
+          enum:
+            - BOOK
+            - QUOTE
+            - HOLD
+            - INITIATE
+            - IGNORE
+            - MODIFY
+            - COMMIT
+            - CANCEL
+        name:
+          type: string
+          description: name of group block
+        description:
+          type: string
+          description: description of group block
+        masterGroupCode:
+          type: string
+          description: master group code
+        # TODO more discussion
+        ## TODO Question, other integrations are mapping these codes. Example CXL->CANCELLED. Anything we need to do here?
+        groupStatusCode:
+          type: string
+          description: group status code
+        #          TODO: make examples?
+        #            - CANCELLED
+        #            - DEFINITE
+        #            - TENTATIVE
+        #            - LOST_REGRET
+        #            - PROSPECT
+        ## TODO Potentially remove this if we don't have a mapping layer
+        originalGroupStatusCode:
+          type: string
+          description: original group status code
+        ## TODO new field to mark whether it impacts inventory, mandatory, called isDirectInventory deductsInventory
+        marketSegmentCode:
+          type: string
+          description: market segment code
+        # TODO Remove?
+        analyticalMarketSegmentCode:
+          type: string
+          description: Analytical Market Segment Code
+        startDate:
+          type: string
+          description: start date
+          format: date
+        endDate:
+          type: string
+          description: end date
+          format: date
+        groupTypeCode:
+          type: string
+          description: group type code
+        bookingDate:
+          type: string
+          format: date
+          description: booking date
+        pickupTypeCode:
+          type: string
+          description: pickup type code
+        sourcePickupTypeCode:
+          type: string
+          description: source pickup type code
+        cancelDate:
+          type: string
+          format: date-time
+          description: cancel date
+        bookingType:
+          type: string
+          description: booking type
+        salesPerson:
+          type: string
+          description: sales person
+        cutoffDays:
+          type: integer
+          description: cutoff days
+        cutoffDate:
+          type: string
+          description: cutoff date
+          format: date
+        groupId:
+          type: string
+          description: group id
+        masterGroupId:
+          type: string
+          description: master group id
+        groupBlocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupBlockDetail'
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+        profileId:
+          type: string
+          description: profile Id
+        rateCode:
+          type: string
+          description: rate code
+  examples:
+    SampleGroupDefiniteExample:
+      value:
+        - clientCode: "WHG"
+          propertyCode: "SAND02CN"
+          code: "TEST_GROUP_CODE_1"
+          action: null
+          name: "TEST_GROUP_NAME_1"
+          description: "TEST_GROUP_DESCRIPTION_1"
+          masterGroupCode: "TEST_MASTER_GROUP_CODE_1"
+          groupStatusCode: "DEFINITE"
+          originalGroupStatusCode: "ACT"
+          marketSegmentCode: "TEST_MS_CODE_1"
+          startDate: "2016-08-10"
+          endDate: "2016-08-12"
+          earliestArrivalDate: "2016-08-10"
+          latestDepartureDate: "2016-08-11"
+          groupTypeCode: "GROUP"
+          bookingDate: "2016-08-01"
+          pickupTypeCode: "INDV"
+          sourcePickupTypeCode: "RLST"
+          cancelDate: null
+          bookingType: "TEST_BOOKING_TYPE_1"
+          salesPerson: "TEST_SALES_PERSON_1"
+          cutoffDays: 5
+          cutoffDate: "2016-07-20"
+          groupId: "TEST_GROUP_ID_1"
+          masterGroupId: "TEST_MASTER_GROUP_ID_1"
+          groupBlocks:
+            - occupancyDate: "2016-08-10"
+              roomTypeCode: "C1K"
+              blocks: 26
+              pickup: 26
+              originalBlocks: 26
+              rate: 190.00000
+              doubleRate: 190.00000
+              tripleRate: 217.27273
+              quadRate: 244.54545
+              singleOccupancy: 1
+              doubleOccupancy: 2
+              tripleOccupancy: 3
+              quadOccupancy: 4
+              originalCurrencyCode: "USD"
+              extraRate: 100.25
+              groupBlockDetailId: null
+            - occupancyDate: "2016-08-11"
+              roomTypeCode: "C1K"
+              blocks: 26
+              pickup: 26
+              originalBlocks: 26
+              rate: 190.00000
+              doubleRate: 190.00000
+              tripleRate: 217.27273
+              quadRate: 244.54545
+              singleOccupancy: 1
+              doubleOccupancy: 2
+              tripleOccupancy: 3
+              quadOccupancy: 4
+              originalCurrencyCode: "USD"
+              extraRate: 100.25
+              groupBlockDetailId: null
+            - occupancyDate: "2016-08-10"
+              roomTypeCode: "C2D"
+              blocks: 2
+              pickup: 2
+              originalBlocks: 0
+              rate: 190.00000
+              doubleRate: 190.00000
+              tripleRate: 217.27273
+              quadRate: 244.54545
+              singleOccupancy: 1
+              doubleOccupancy: 2
+              tripleOccupancy: 3
+              quadOccupancy: 4
+              originalCurrencyCode: "USD"
+              extraRate: 100.25
+              groupBlockDetailId: null
+            - occupancyDate: "2016-08-1`"
+              roomTypeCode: "C2D"
+              blocks: 2
+              pickup: 2
+              originalBlocks: 0
+              rate: 190.00000
+              doubleRate: 190.00000
+              tripleRate: 217.27273
+              quadRate: 244.54545
+              singleOccupancy: 1
+              doubleOccupancy: 2
+              tripleOccupancy: 3
+              quadOccupancy: 4
+              originalCurrencyCode: "USD"
+              extraRate: 100.25
+              groupBlockDetailId: null
+          services:
+            - serviceName: "BKFAST"
+              serviceValue: 10.25
+              inclusive: true
+              inclusionType: "INCLUDE"
+              roomRevenuePackage: true
+              startDate: "2016-08-10"
+              endDate: "2016-08-15"
+          profileId: "66233346"
+          rateCode: "TEST_RATE_CODE_1"
+    SampleGroupCancelledExample:
+      value:
+        - clientCode: "WHG"
+          propertyCode: "SAND02CN"
+          code: "TEST_GROUP_CODE_2"
+          action: null
+          name: "TEST_GROUP_NAME_2"
+          description: "TEST_GROUP_DESCRIPTION_2"
+          masterGroupCode: "TEST_MASTER_GROUP_CODE_2"
+          groupStatusCode: "CANCELLED"
+          originalGroupStatusCode: "CAN"
+          marketSegmentCode: "TEST_MS_CODE_2"
+          startDate: "2016-08-10"
+          endDate: "2016-08-12"
+          earliestArrivalDate: "2016-08-10"
+          latestDepartureDate: "2016-08-11"
+          groupTypeCode: "GROUP"
+          bookingDate: "2016-08-01"
+          pickupTypeCode: "INDV"
+          sourcePickupTypeCode: "RLST"
+          cancelDate: null
+          bookingType: "TEST_BOOKING_TYPE_2"
+          salesPerson: "TEST_SALES_PERSON_2"
+          cutoffDays: 5
+          cutoffDate: "2016-07-20"
+          groupId: "TEST_GROUP_ID_2"
+          masterGroupId: "TEST_MASTER_GROUP_ID_2"
+          groupBlocks:
+            - occupancyDate: "2016-08-10"
+              roomTypeCode: "C1K"
+              blocks: 26
+              pickup: 26
+              originalBlocks: 26
+              rate: 190.00000
+              doubleRate: 190.00000
+              tripleRate: 217.27273
+              quadRate: 244.54545
+              singleOccupancy: 1
+              doubleOccupancy: 2
+              tripleOccupancy: 3
+              quadOccupancy: 4
+              originalCurrencyCode: "USD"
+              extraRate: 100.25
+              groupBlockDetailId: null
+            - occupancyDate: "2016-08-11"
+              roomTypeCode: "C1K"
+              blocks: 26
+              pickup: 26
+              originalBlocks: 26
+              rate: 190.00000
+              doubleRate: 190.00000
+              tripleRate: 217.27273
+              quadRate: 244.54545
+              singleOccupancy: 1
+              doubleOccupancy: 2
+              tripleOccupancy: 3
+              quadOccupancy: 4
+              originalCurrencyCode: "USD"
+              extraRate: 100.25
+              groupBlockDetailId: null
+            - occupancyDate: "2016-08-10"
+              roomTypeCode: "C2D"
+              blocks: 2
+              pickup: 2
+              originalBlocks: 0
+              rate: 190.00000
+              doubleRate: 190.00000
+              tripleRate: 217.27273
+              quadRate: 244.54545
+              singleOccupancy: 1
+              doubleOccupancy: 2
+              tripleOccupancy: 3
+              quadOccupancy: 4
+              originalCurrencyCode: "USD"
+              extraRate: 100.25
+              groupBlockDetailId: null
+            - occupancyDate: "2016-08-11"
+              roomTypeCode: "C2D"
+              blocks: 2
+              pickup: 2
+              originalBlocks: 0
+              rate: 190.00000
+              doubleRate: 190.00000
+              tripleRate: 217.27273
+              quadRate: 244.54545
+              singleOccupancy: 1
+              doubleOccupancy: 2
+              tripleOccupancy: 3
+              quadOccupancy: 4
+              originalCurrencyCode: "USD"
+              extraRate: 100.25
+              groupBlockDetailId: null
+          services:
+            - serviceName: "BKFAST"
+              serviceValue: 10.25
+              inclusive: true
+              inclusionType: "INCLUDE"
+              roomRevenuePackage: true
+              startDate: "2016-08-10"
+              endDate: "2016-08-15"
+          profileId: 66233346
+          rateCode: "TEST_RATE_CODE_2"
+
+  ## TODO verify if we can drop security schemas or not.
+  securitySchemes:
+    oAuth2ClientCredentialsStage:
+      type: oauth2
+      description: description
+      flows:
+        clientCredentials:
+          tokenUrl: https://fds.ideasrms.com/api/uis/internal_m2m/oauth2/token
+          scopes:
+            write: allows modifying resources
+            read: allows reading resources
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: description
+      flows:
+        clientCredentials:
+          tokenUrl: https://fds.ideasrms.com/api/uis/internal_m2m/oauth2/token
+          scopes:
+            write: allows modifying resources
+            read: allows reading resources
+
+security:
+  - oAuth2ClientCredentialsStage:
+      - read
+      - write
+  - oAuth2ClientCredentials:
+      - read
+      - write

@@ -1,0 +1,86 @@
+openapi: 3.0.1
+info:
+  title: IDeaS REST API
+  description: >-
+    IDEAS canonical Activity API
+  contact:
+    name: IDeaS Dev
+  version: 0.0.1-ALPHA
+paths:
+  '/dummy/path/':
+    get:
+      operationId: dummyPath
+      requestBody:
+        description: "dummyPath"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "string"
+      responses:
+        '400':
+          description: Bad request
+          content:
+            '*/*':
+              schema:
+                $ref: 'common.yaml#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: 'common.yaml#/components/schemas/ApiError'
+components:
+  schemas:
+    SummaryActivity:
+      type: object
+      required:
+        - clientCode
+        - propertyCode
+        - fiscalDate
+        - occupancyDate
+      properties:
+        id:
+          type: string
+        arrivals:
+          type: integer
+          format: int32
+        cancellations:
+          type: integer
+          format: int32
+        clientCode:
+          type: string
+        correlationId:
+          type: string
+        createDate:
+          type: string
+          format: date-time
+        departures:
+          type: integer
+          format: int32
+        fiscalDate:
+          type: string
+          format: date
+        foodRevenue:
+          type: number
+          format: double
+        noShows:
+          type: integer
+          format: int32
+        noShowRoomRevenue:
+          type: number
+          format: double
+        occupancyDate:
+          type: string
+          format: date
+        propertyCode:
+          type: string
+        roomsSold:
+          type: integer
+          format: int32
+        roomRevenue:
+          type: number
+          format: double
+        totalRevenue:
+          type: number
+          format: double

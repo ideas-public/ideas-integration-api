@@ -1,0 +1,4 @@
+rootProject.name = 'ideas-public-api-beta'
+
+include 'ideas-public-api-beta-gen'
+include 'ideas-public-api-beta-impl'

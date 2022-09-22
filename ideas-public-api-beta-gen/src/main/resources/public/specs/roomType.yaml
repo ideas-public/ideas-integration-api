@@ -1,0 +1,170 @@
+openapi: 3.0.1
+info:
+  title: IDeaS REST API
+  description: >-
+    IDEAS canonical RoomType data consumption API
+  contact:
+    name: IDeaS Dev
+  version: 0.0.1-ALPHA
+paths:
+  '/api/public/room-types/v1':
+    post:
+      tags:
+        - IDeaSRoomTypeV1
+      summary: 'Post RoomTypes for a property for the async processing'
+      description: 'In success case, Http Code 202 will be returned'
+      operationId: postRoomTypesV1
+      requestBody:
+        description: "RoomType list to process"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/IDeaSRoomType"
+              oneOf:
+                - minItems: 1
+                  maxItems: 1000
+            examples:
+              placeholderExample:
+                $ref: "#/components/examples/placeholderIDeaSRoomTypeExample"
+      responses:
+        '202':
+          description: RoomTypes posted
+          content: {}
+        '400':
+          description: Bad request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiError'
+components:
+  schemas:
+    ApiError:
+      required:
+        - error
+        - message
+        - status
+        - timestamp
+      type: object
+      properties:
+        error:
+          type: string
+          description: HTTP status message
+        exception:
+          type: string
+          description: Fully qualified exception type
+        message:
+          type: string
+          description: Exception / error message
+        path:
+          type: string
+        status:
+          type: integer
+          description: HTTP status code for the error
+          format: int32
+        timestamp:
+          type: string
+          description: Date and time the error occurred
+          format: date-time
+    IDeaSRoomType:
+      type: object
+      required:
+        - clientCode
+        - propertyCode
+        - code
+        - accomCapacity
+        - inactive
+      properties:
+        createDate:
+          type: string
+          format: date-time
+        lastModifiedDate:
+          type: string
+          format: date-time
+        clientCode:
+          type: string
+        propertyCode:
+          type: string
+        correlationId:
+          type: string
+        code:
+          type: string
+        oldCode:
+          type: string
+        newCode:
+          type: string
+        accomCapacity:
+          type: integer
+          format: int32
+        description:
+          type: string
+        inactive:
+          type: boolean
+        yieldCategory:
+          type: string
+        pseudoRoom:
+          type: boolean
+        roomClass:
+          type: string
+        componentParts:
+          type: array
+          items:
+            $ref: '#/components/schemas/IDeaSComponentPart'
+        virtualRoom:
+          type: boolean
+    IDeaSComponentPart:
+      type: object
+      properties:
+        roomType:
+          type: string
+        roomCount:
+          type: integer
+          format: int32
+  examples:
+    placeholderIDeaSRoomTypeExample:
+      value:
+        createDate: "2022-01-01T12:23:04Z"
+        lastModifiedDate: "2022-01-01T12:23:14Z"
+        clientCode: "CLIENT_CODE"
+        propertyCode: "PROPERTY_CODE"
+        correlationId: "CORRELATION_ID"
+        code: "CODE"
+        oldCode: "OLD_CODE"
+        newCode: "NEW_CODE"
+        accomCapacity: 10
+        description: "DESCRIPTION"
+        inactive: true
+        yieldCategory: "YIELD_CATEGORY"
+        pseudoRoom: true
+        roomClass: "ROOM_CLASS"
+        componentParts:
+          roomType: "ROOM_TYPE"
+          roomCount: 20
+        virtualRoom: true
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: See https://ideasinc.atlassian.net/wiki/spaces/AFD/pages/475103264/API+Security
+      flows:
+        clientCredentials:
+          tokenUrl: https://fds.stage.ideasrms.com/api/uis/internal_m2m/oauth2/token
+          scopes:
+            com.ideas.casper/ideasApiClient: allows reading and modifying resources
+            read: allows reading resources
+    oAuth2ClientCredentialsProd:
+      type: oauth2
+      description: See https://ideasinc.atlassian.net/wiki/spaces/AFD/pages/475103264/API+Security
+      flows:
+        clientCredentials:
+          tokenUrl: https://fds.ideasrms.com/api/uis/internal_m2m/oauth2/token
+          scopes:
+            com.ideas.casper/ideasApiClient: allows reading and modifying resources
+            read: allows reading resources

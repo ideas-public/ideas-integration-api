@@ -1,0 +1,80 @@
+openapi: 3.0.1
+info:
+  title: IDeaS REST API
+  description: >-
+    IDEAS API commons objects
+  contact:
+    name: IDeaS Dev
+  version: 0.0.1-ALPHA
+paths:
+  '/dummy/path/':
+    get:
+      operationId: dummyPath
+      requestBody:
+        description: "dummyPath"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "string"
+      responses:
+        '400':
+          description: Bad request
+          content:
+            '*/*':
+              schema:
+                $ref: 'common.yaml#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: 'common.yaml#/components/schemas/ApiError'
+components:
+  schemas:
+    ApiError:
+      required:
+        - error
+        - message
+        - status
+        - timestamp
+      type: object
+      properties:
+        error:
+          type: string
+          description: HTTP status message
+        exception:
+          type: string
+          description: Fully qualified exception type
+        message:
+          type: string
+          description: Exception / error message
+        path:
+          type: string
+        status:
+          type: integer
+          description: HTTP status code for the error
+          format: int32
+        timestamp:
+          type: string
+          description: Date and time the error occurred
+          format: date-time
+    Link:
+      type: object
+      properties:
+        deprecation:
+          type: string
+        href:
+          type: string
+        hreflang:
+          type: string
+        media:
+          type: string
+        rel:
+          type: string
+        templated:
+          type: boolean
+        title:
+          type: string
+        type:
+          type: string

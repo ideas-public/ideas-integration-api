@@ -1,0 +1,101 @@
+openapi: 3.0.1
+info:
+  title: IDeaS REST API
+  description: >-
+    IDEAS canonical Activity API
+  contact:
+    name: IDeaS Dev
+  version: 0.0.1-ALPHA
+paths:
+  '/api/public/activity/total-hotel/v1':
+    post:
+      tags:
+        - IDeaSTotalHotelActivityV1
+      summary: 'Post total hotel Activity for a property for the async processing'
+      description: 'In success case, Http Code 202 will be returned'
+      operationId: postTotalHotelActivityV1
+      requestBody:
+        description: "Total Hotel activity list to process"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/IDeaSRoomTypeActivity"
+              oneOf:
+                - minItems: 1
+                  maxItems: 1000
+            examples:
+              placeholderExample:
+                $ref: '#/components/examples/SampleTotalHotelActivity'
+      responses:
+        '202':
+          description: Total Hotel Activity posted
+          content: {}
+        '400':
+          description: Bad request
+          content:
+            '*/*':
+              schema:
+                $ref: 'common.yaml#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: 'common.yaml#/components/schemas/ApiError'
+components:
+  schemas:
+    IDeaSRoomTypeActivity:
+      type: object
+      allOf:
+        - $ref: 'summaryActivity.yaml#/components/schemas/SummaryActivity'
+        - type: object
+          properties:
+            totalAccomCapacity:
+              type: integer
+              format: int32
+            roomsNotAvailableMaintenance:
+              type: integer
+              format: int32
+            roomsNotAvailableOther:
+              type: integer
+              format: int32
+  examples:
+    SampleTotalHotelActivity:
+      value:
+        - clientCode: "WHG"
+          propertyCode: "SAND02CN"
+          roomsSold: 1
+          arrivals: 2
+          departures: 3
+          cancellations: 4
+          noShows: 5
+          roomRevenue: 56.78
+          foodRevenue: 57.34
+          totalRevenue: 58.567
+          occupancyDate: "2023-01-06"
+          fiscalDate: "2022-06-10"
+          correlationId: "da9a9788-ed60-42be-91c3-6cdaec116cb3"
+          noShowRoomRevenue: 59.45
+          totalAccomCapacity: 139
+          roomsNotAvailableMaintenance: 6
+          roomsNotAvailableOther: 7
+        - clientCode: "WHG"
+          propertyCode: "SAND02CN"
+          roomsSold: 1
+          arrivals: 2
+          departures: 3
+          cancellations: 4
+          noShows: 5
+          roomRevenue: 56.78
+          foodRevenue: 57.34
+          totalRevenue: 58.567
+          occupancyDate: "2023-01-07"
+          fiscalDate: "2022-06-10"
+          correlationId: "da9a9788-ed60-42be-91c3-6cdaec116cb3"
+          noShowRoomRevenue: 59.45
+          totalAccomCapacity: 139
+          roomsNotAvailableMaintenance: 6
+          roomsNotAvailableOther: 7

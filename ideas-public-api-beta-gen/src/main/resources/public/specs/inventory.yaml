@@ -1,0 +1,186 @@
+openapi: 3.0.1
+info:
+  title: IDeaS REST API
+  description: >-
+    IDEAS canonical Inventory data consumption API
+  contact:
+    name: IDeaS Dev
+  version: 0.0.1-ALPHA
+paths:
+  '/api/public/inventories/v1':
+    post:
+      tags:
+        - IDeaSInventoryV1
+      summary: 'Post inventories for a property for the async processing'
+      description: 'In success case, Http Code 202 will be returned'
+      operationId: postInventoriesForAProperty
+      requestBody:
+        description: "Inventories list to process"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/IDeaSInventory"
+              oneOf:
+                - minItems: 1
+                  maxItems: 1000
+            examples:
+              sampleInventoryVirtual:
+                $ref: '#/components/examples/sampleInventoryVirtual'
+      responses:
+        '202':
+          description: Inventories posted
+          content: {}
+        '400':
+          description: Bad request
+          content:
+            '*/*':
+              schema:
+                $ref: 'common.yaml#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: 'common.yaml#/components/schemas/ApiError'
+components:
+  schemas:
+    IDeaSInventory:
+      type: object
+      required:
+        - clientCode
+        - propertyCode
+        - createDate
+        - occupancyDate
+        - roomTypeInventories
+        - virtualRoomTypeInventories
+      properties:
+        clientCode:
+          type: string
+          example: "abc123"
+        createDate:
+          type: string
+          format: date-time
+          example: "2022-01-01T12:23:34Z"
+          description: "When actual record was assembled, business date which information applies to"
+        propertyCode:
+          type: string
+          example: "abc123"
+        occupancyDate:
+          type: string
+          format: date
+          example: "2022-01-02"
+        correlationId:
+          type: string
+          example: "abc123"
+        roomTypeInventories:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/IDeaSRoomTypeInventory'
+        virtualRoomTypeInventories:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/IDeaSRoomTypeInventory'
+    IDeaSRoomTypeInventory:
+      type: object
+      required:
+        - accomCapacity
+        - roomsNotAvailableMaintenance
+        - roomsNotAvailableOther
+        - roomsSold
+        - roomTypeCode
+      properties:
+        accomCapacity:
+          type: integer
+          format: int32
+          minimum: 0
+          example: 10
+        roomsNotAvailableMaintenance:
+          type: integer
+          format: int32
+          minimum: 0
+          example: 10
+        roomsNotAvailableOther:
+          type: integer
+          format: int32
+          minimum: 0
+          example: 10
+        roomsSold:
+          type: integer
+          format: int32
+          minimum: 0
+          example: 10
+        roomTypeCode:
+          type: string
+          example: "abc123"
+        transientSold:
+          type: integer
+          format: int32
+          minimum: 0
+          example: 10
+        groupSold:
+          type: integer
+          format: int32
+          minimum: 0
+          example: 10
+  examples:
+    sampleInventoryVirtual:
+      value:
+        - clientCode: "WHG"
+          propertyCode: "SAND02CN"
+          occupancyDate: "2020-08-25"
+          createDate: "2022-06-28T00:57:39Z"
+          correlationId: "11292d1b6-55c8-4c84-a09c-7bb74403d156"
+          roomTypeInventories:
+            - accomCapacity: 28
+              roomsNotAvailableMaintenance: 0
+              roomsNotAvailableOther: 2
+              roomsSold: 28
+              roomTypeCode: "2BLR"
+              transientSold: 100
+              groupSold: 50
+            - accomCapacity: 33
+              roomsNotAvailableMaintenance: 1
+              roomsNotAvailableOther: 2
+              roomsSold: 31
+              roomTypeCode: "2BPAT"
+              transientSold: 100
+              groupSold: 50
+          virtualRoomTypeInventories:
+            - accomCapacity: 2
+              roomsNotAvailableMaintenance: 0
+              roomsNotAvailableOther: 2
+              roomsSold: 2
+              roomTypeCode: "10BDUP"
+              transientSold: 0
+              groupSold: 0
+            - accomCapacity: 368
+              roomsNotAvailableMaintenance: 241
+              roomsNotAvailableOther: 2
+              roomsSold: 137
+              roomTypeCode: "2BlRK"
+              transientSold: 0
+              groupSold: 0
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: See https://ideasinc.atlassian.net/wiki/spaces/AFD/pages/475103264/API+Security
+      flows:
+        clientCredentials:
+          tokenUrl: https://fds.stage.ideasrms.com/api/uis/internal_m2m/oauth2/token
+          scopes:
+            com.ideas.casper/ideasApiClient: allows reading and modifying resources
+            read: allows reading resources
+    oAuth2ClientCredentialsProd:
+      type: oauth2
+      description: See https://ideasinc.atlassian.net/wiki/spaces/AFD/pages/475103264/API+Security
+      flows:
+        clientCredentials:
+          tokenUrl: https://fds.ideasrms.com/api/uis/internal_m2m/oauth2/token
+          scopes:
+            com.ideas.casper/ideasApiClient: allows reading and modifying resources
+            read: allows reading resources

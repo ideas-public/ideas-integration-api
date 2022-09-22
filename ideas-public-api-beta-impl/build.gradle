@@ -1,0 +1,10 @@
+project(":ideas-public-api-beta-impl") {
+
+    dependencies {
+        implementation project(":ideas-public-api-beta-gen")
+    }
+
+    jar {
+        enabled = true
+    }
+}

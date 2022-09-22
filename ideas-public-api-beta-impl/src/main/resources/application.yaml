@@ -1,0 +1,7 @@
+ideas:
+  client:
+    url: https://pmsinbound-internal.stage.ideasrms.com
+    retry:
+      period: 5
+      maxPeriod: 30
+      maxAttempts: 6
