@@ -1,4 +1,4 @@
-rootProject.name = 'ideas-public-api-beta'
+rootProject.name = 'ideas-integration-api'
 
-include 'ideas-public-api-beta-gen'
-include 'ideas-public-api-beta-impl'
+include 'ideas-integration-api-gen'
+include 'ideas-integration-api-impl'

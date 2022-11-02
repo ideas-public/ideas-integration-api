@@ -1,6 +1,6 @@
 import groovy.io.FileType
 
-project(":ideas-public-api-beta-gen") {
+project(":ideas-integration-api-gen") {
 
     println "${name} library version: ${version}"
 
@@ -9,7 +9,7 @@ project(":ideas-public-api-beta-gen") {
 
     apply plugin: "org.openapi.generator"
 
-    def apiSpecsDir = "${project(":ideas-public-api-beta-gen").projectDir}/src/main/resources/public/specs/".toString()
+    def apiSpecsDir = "${project(":ideas-integration-api-gen").projectDir}/src/main/resources/public/specs/".toString()
     def apiSpecsList = []
 
     def dir = new File(apiSpecsDir)

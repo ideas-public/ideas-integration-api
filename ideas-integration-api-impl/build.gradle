@@ -1,0 +1,10 @@
+project(":ideas-integration-api-impl") {
+
+    dependencies {
+        implementation project(":ideas-integration-api-gen")
+    }
+
+    jar {
+        enabled = true
+    }
+}
