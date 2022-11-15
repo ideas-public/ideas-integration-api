@@ -1,4 +1,4 @@
-package com.ideas.ngi.ideas.client;
+package com.ideas.ngi.ideas.client.decoder;
 
 import feign.Response;
 import feign.RetryableException;

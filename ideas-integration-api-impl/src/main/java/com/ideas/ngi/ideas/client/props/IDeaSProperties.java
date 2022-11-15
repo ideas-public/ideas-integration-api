@@ -1,4 +1,4 @@
-package com.ideas.ngi.ideas.client;
+package com.ideas.ngi.ideas.client.props;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

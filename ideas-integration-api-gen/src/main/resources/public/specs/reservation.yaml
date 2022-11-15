@@ -10,6 +10,10 @@ paths:
       tags:
         - IDeaSReservationV1
       summary: save reservations
+      security:
+        - oAuth2ClientCredentials:
+          - read
+          - write
       description : some description here...
       operationId: saveReservations
       requestBody:
@@ -517,15 +521,6 @@ components:
           versionId: "2001"
 
   securitySchemes:
-    oAuth2ClientCredentialsStage:
-      type: oauth2
-      description: description
-      flows:
-        clientCredentials:
-          tokenUrl: https://fds.ideasrms.com/api/uis/internal_m2m/oauth2/token
-          scopes:
-            write: allows modifying resources
-            read: allows reading resources
     oAuth2ClientCredentials:
       type: oauth2
       description: description
@@ -537,9 +532,6 @@ components:
             read: allows reading resources
 
 security:
-  - oAuth2ClientCredentialsStage:
-      - read
-      - write
   - oAuth2ClientCredentials:
       - read
       - write

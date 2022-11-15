@@ -1,9 +1,13 @@
 package com.ideas.ngi.ideas.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import feign.Capability;
+import com.ideas.ngi.ideas.client.decoder.IDeaSDecoder;
+import com.ideas.ngi.ideas.client.decoder.IDeaSErrorDecoder;
+import com.ideas.ngi.ideas.client.props.IDeaSProperties;
+import com.ideas.ngi.ideas.client.props.IDeaSRetryProperties;
 import feign.Feign;
 import feign.Logger;
+import feign.RequestInterceptor;
 import feign.Retryer;
 import feign.codec.Decoder;
 import feign.httpclient.ApacheHttpClient;
@@ -26,6 +30,7 @@ public class IDeaSClientFactory {
     private final Logger.Level logLevel;
     private final IDeaSRetryProperties ideaSRetryProperties;
     private final IDeaSProperties iDeaSProperties;
+    private final RequestInterceptor pmsInboundAuthInterceptor;
 
     @SuppressWarnings("unchecked")
     public <T> T build(IDeaSDataType dataType) {
@@ -33,6 +38,7 @@ public class IDeaSClientFactory {
         return (T) Feign.builder()
                 .client(new ApacheHttpClient())
                 .contract(new SpringMvcContract())
+                .requestInterceptor(pmsInboundAuthInterceptor)
                 .logLevel(logLevel)
                 .encoder(new JacksonEncoder(objectMapper))
                 .decoder(httpClientDecoder(objectMapper))

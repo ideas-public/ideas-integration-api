@@ -34,7 +34,7 @@ project(":ideas-integration-api-gen") {
             enablePostProcessFile = true
             skipOverwrite = true
             configOptions = [
-                    dateLibrary  : "java8-localdatetime",
+                    dateLibrary  : "java8",
                     library      : "spring-cloud",
                     configPackage: "com.ideas.ngi.ideas.client.configuration"
             ]

@@ -32,12 +32,14 @@ subprojects {
         implementation "org.springframework.boot:spring-boot-starter-actuator"
         implementation "org.springframework.boot:spring-boot-starter-web"
         implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+        implementation "org.springframework.boot:spring-boot-starter-security"
         implementation "org.springframework.boot:spring-boot-starter-validation"
         implementation "org.springframework.boot:spring-boot-starter-amqp"
         implementation "org.springframework.boot:spring-boot-starter-cache"
         implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
         implementation "org.springframework.boot:spring-boot-starter-hateoas"
         implementation "org.springframework.cloud:spring-cloud-context"
+        implementation group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.5.2.RELEASE'
 
         implementation "io.springfox:springfox-swagger2:3.0.0"
         implementation 'org.openapitools:jackson-databind-nullable:0.2.3'
@@ -54,6 +56,8 @@ subprojects {
         testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
         annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
         testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+        testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.7.5'
     }
 
 
@@ -61,5 +65,9 @@ subprojects {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
+    }
+
+    tasks.withType(Test) {
+        useJUnitPlatform()
     }
 }

@@ -1,10 +1,10 @@
-# IDeaS Public Api
+# IDeaS Public Integration Api
 
-Feign Java client for accessing IDeaS Public API's
+Feign Java client for accessing IDeaS Public Integration API's
 
 ## Prerequisites
 
-    1. Request client and secret from IDeaS at IDeaSIntegrationAccess@IDeaS.com
+    1. Request client and secret from IDeaS at cloudsolutions@ideas.com
     2. Request IDeaS to create vendor/client/property (manually IDeaS process for now can automate in future)
 
 

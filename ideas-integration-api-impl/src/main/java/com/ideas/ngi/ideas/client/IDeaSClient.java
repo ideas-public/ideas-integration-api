@@ -1,5 +1,7 @@
 package com.ideas.ngi.ideas.client;
 
+import com.ideas.ngi.ideas.client.group.IDeaSGroupBlockMasterV1ApiClient;
+import com.ideas.ngi.ideas.client.inventory.IDeaSInventoryV1ApiClient;
 import com.ideas.ngi.ideas.client.reservation.IDeaSReservationV1ApiClient;
 
 import java.util.Arrays;
@@ -10,7 +12,13 @@ import java.util.stream.Collectors;
 
 public enum IDeaSClient {
 
-    RESERVATION_CLIENT(IDeaSDataType.RESERVATION, IDeaSReservationV1ApiClient.class);
+    GROUP_CLIENT(IDeaSDataType.GROUP, IDeaSGroupBlockMasterV1ApiClient.class),
+    INVENTORY_CLIENT(IDeaSDataType.INVENTORY, IDeaSInventoryV1ApiClient.class),
+    RESERVATION_CLIENT(IDeaSDataType.RESERVATION, IDeaSReservationV1ApiClient.class),
+    ROOM_TYPE_CLIENT(IDeaSDataType.ROOM_TYPE, IDeaSReservationV1ApiClient.class),
+    ROOM_TYPE_ACTIVITY_CLIENT(IDeaSDataType.ROOM_TYPE_ACTIVITY, IDeaSReservationV1ApiClient.class),
+    ROOM_TYPE_MARKET_ACTIVITY_CLIENT(IDeaSDataType.ROOM_TYPE_MARKET_ACTIVITY, IDeaSReservationV1ApiClient.class),
+    TOTAL_HOTEL_ACTIVITY_CLIENT(IDeaSDataType.TOTAL_HOTEL_ACTIVITY, IDeaSReservationV1ApiClient.class),;
 
     private final IDeaSDataType iDeaSDataType;
     private final Class<?> clazz;
