@@ -79,29 +79,25 @@ components:
       required:
         - clientCode
         - propertyCode
-        - code
-        - accomCapacity
+        - roomTypeCode
+        - roomTypeCapacity
         - inactive
       properties:
-        createDate:
-          type: string
-          format: date-time
-        lastModifiedDate:
-          type: string
-          format: date-time
+        #        TODO: add internal (external)roomTypeId field desc: their internal id for the roomType
+
         clientCode:
           type: string
         propertyCode:
           type: string
         correlationId:
           type: string
-        code:
+        roomTypeCode:
           type: string
         oldCode:
           type: string
         newCode:
           type: string
-        accomCapacity:
+        roomTypeCapacity:
           type: integer
           format: int32
         description:
@@ -131,24 +127,24 @@ components:
   examples:
     placeholderIDeaSRoomTypeExample:
       value:
-        createDate: "2022-01-01T12:23:04Z"
-        lastModifiedDate: "2022-01-01T12:23:14Z"
-        clientCode: "CLIENT_CODE"
-        propertyCode: "PROPERTY_CODE"
-        correlationId: "CORRELATION_ID"
-        code: "CODE"
-        oldCode: "OLD_CODE"
-        newCode: "NEW_CODE"
-        accomCapacity: 10
-        description: "DESCRIPTION"
-        inactive: true
-        yieldCategory: "YIELD_CATEGORY"
-        pseudoRoom: true
-        roomClass: "ROOM_CLASS"
-        componentParts:
-          roomType: "ROOM_TYPE"
-          roomCount: 20
-        virtualRoom: true
+        - createDate: "2022-01-01T12:23:04Z"
+          lastModifiedDate: "2022-01-01T12:23:14Z"
+          clientCode: "CLIENT_CODE"
+          propertyCode: "PROPERTY_CODE"
+          correlationId: "CORRELATION_ID"
+          roomTypeCode: "ROOM_TYPE_CODE"
+          oldCode: "OLD_CODE"
+          newCode: "NEW_CODE"
+          roomTypeCapacity: 10
+          description: "DESCRIPTION"
+          inactive: true
+          yieldCategory: "YIELD_CATEGORY"
+          pseudoRoom: true
+          roomClass: "ROOM_CLASS"
+          componentParts:
+            - roomType: "ROOM_TYPE"
+              roomCount: 20
+          virtualRoom: true
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

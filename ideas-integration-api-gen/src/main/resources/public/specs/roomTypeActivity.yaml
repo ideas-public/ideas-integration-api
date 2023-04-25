@@ -54,10 +54,12 @@ components:
         - type: object
           required:
             - roomTypeCode
+            - roomsNotAvailableMaintenance
+            - roomsNotAvailableOther
           properties:
             roomTypeCode:
               type: string
-            accomCapacity:
+            roomTypeCapacity:
               type: integer
               format: int32
             roomsNotAvailableMaintenance:
@@ -84,7 +86,7 @@ components:
           correlationId: "11292d1b6-55c8-4c84-a09c-7bb74403d156"
           noShowRoomRevenue: 123.56
           roomTypeCode: "DLK"
-          accomCapacity: 58
+          roomTypeCapacity: 58
           roomsNotAvailableMaintenance: 5
           roomsNotAvailableOther: 6
         - clientCode: "WHG"
@@ -102,6 +104,6 @@ components:
           correlationId: "11292d1b6-55c8-4c84-a09c-7bb74403d156"
           noShowRoomRevenue: 152.32
           roomTypeCode: "DLK"
-          accomCapacity: 58
+          roomTypeCapacity: 58
           roomsNotAvailableMaintenance: 5
           roomsNotAvailableOther: 6

@@ -52,8 +52,11 @@ components:
       allOf:
         - $ref: 'summaryActivity.yaml#/components/schemas/SummaryActivity'
         - type: object
+          required:
+            - roomsNotAvailableMaintenance
+            - roomsNotAvailableOther
           properties:
-            totalAccomCapacity:
+            totalRoomTypeCapacity:
               type: integer
               format: int32
             roomsNotAvailableMaintenance:
