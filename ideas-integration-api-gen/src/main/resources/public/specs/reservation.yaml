@@ -10,10 +10,6 @@ paths:
       tags:
         - IDeaSReservationV1
       summary: save reservations
-      security:
-        - oAuth2ClientCredentials:
-          - read
-          - write
       description : some description here...
       operationId: saveReservations
       requestBody:
@@ -31,8 +27,8 @@ paths:
                 $ref: '#/components/examples/placeholderReservationExample'
 
       responses:
-        '200':
-          description: OK
+        '202':
+          description: Accepted
         '400':
           description: Bad request
           content:
@@ -57,7 +53,6 @@ components:
         - status
         - roomStays
         - numberOfRooms
-        - lastModifiedDate
         - channel
       properties:
         bookingDate:
@@ -71,55 +66,30 @@ components:
         cancellationId:
           type: string
           description: cancellation id
-          format: string
         cancellationReason:
           type: string
           description: reason reservation was cancelled
-          format: string
         channel:
           type: string
           description: booking channel reservation was made with
-          format: string
         clientCode:
           type: string
           description: client code associated with reservation
-          format: string
         confirmationNumber:
           type: string
           description: confirmation number of the reservation
-          format: string
         correlationId:
           type: string
-          description: TODO REMOVE?
-          format: TODO REMOVE?
-        createDate:
-          type: string
-          format: date-time
-          description: TODO REMOVE?
+          description: correlation ID
         customerValue:
           type: string
-          description: TODO
-          format: TODO
-        earliestArrivalDate:
-          type: string
-          format: date
-          description: TODO REMOVE?
-        lastModifiedDate:
-          type: string
-          format: date-time
-          description: TODO REMOVE?
-        latestDepartureDate:
-          type: string
-          format: date
-          description: TODO REMOVE?
+          description: customer value
         multiReservationId:
           type: string
-          description: TODO
-          format: TODO
+          description: multi reservation id
         nationality:
           type: string
           description: nation booking was made in
-          format: string
         numberOfRooms:
           type: integer
           format: int32
@@ -129,41 +99,33 @@ components:
           items:
             type: string
           description: previous sharers in reservations
-          format: TODO
-        isPrimary:
+        primarySharer:
           type: boolean
-          description: TODO REMOVE?
-          format: TODO REMOVE?
+          description: primary sharer
         profileId:
           type: string
           description: id of profile associated with this reservation
-          format: string
         propertyCode:
           type: string
           description: property code associated with this reservation
-          format: string
         reservationId:
           type: string
           description: id of reservation
-          format: string
         roomStays:
           type: array
+          minItems: 1
           items:
-            $ref: '#/components/schemas/RoomStay'
+            $ref: '#/components/schemas/IDeaSRoomStay'
         profiles:
           type: array
+          minItems: 1
           items:
-            $ref: '#/components/schemas/Profile'
+            $ref: '#/components/schemas/IDeaSProfile'
         sharers:
           type: array
           items:
             type: string
           description: list of sharers
-          format: string
-        statisticsCorrelationId:
-          type: string
-          description: TODO REMOVE?
-          format: TODO REMOVE?
         status:
           type: string
           enum:
@@ -172,123 +134,109 @@ components:
             - IN_HOUSE
             - CHECKED_OUT
             - NO_SHOW
-            - NA
           description: status of reservation
           format: enum
         stayRevenue:
           $ref: '#/components/schemas/StayRevenue'
-        tempLookupId:
-          type: string
-          description: TODO
-          format: TODO REMOVE?
-        versionId:
-          type: integer
-          description: TODO
-          format: int64
-    RoomStay:
+    IDeaSRoomStay:
       type: object
       required:
         - rates
         - arrivalDate
         - departureDate
+        - bookedRoomTypeCode
+        - marketCode
+        - roomTypeCode
+        - rateCode
+        - sourceBookingCode
+        - numberOfChildren
+        - numberOfAdults
+        - bookingType
       properties:
-        analyticalMarketSegmentCode:
-          type: string
-          description: TODO
-          format: TODO
         arrivalDate:
           type: string
           format: date
-          description: TODO
-        bookedAccomTypeCode:
+          description: date of arrival
+        bookedRoomTypeCode:
           type: string
-          description: TODO
-          format: TODO
+          description: booked room type code
         bookingType:
           type: string
-          description: TODO
-          format: TODO
+          description: booking type
         currencyExchangeId:
           type: string
-          description: TODO
-          format: TODO
+          description: currency exchange ID
         departureDate:
           type: string
           format: date
-          description: TODO
-        fromPrimary:
-          type: boolean
-          description: TODO
-          format: TODO
-        invBlockCode:
+          description: date of departure
+        groupBlockCode:
           type: string
-          description: TODO
-          format: TODO
-        invTypeCode:
+          description: group block code
+        roomTypeCode:
           type: string
-          description: TODO
-          format: TODO
+          description: room type code
         marketCode:
           type: string
-          description: TODO
-          format: TODO
+          description: market code
         numberOfAdults:
           type: integer
           format: int32
-          description: TODO
+          description: number of adults
         numberOfChildren:
           type: integer
           format: int32
-          description: TODO
+          description: number of children
         originalCurrencyCode:
           type: string
-          description: TODO
-          format: TODO
+          description: original curency code
         rateCode:
           type: string
-          description: TODO
-          format: TODO
+          description: rate code
         rates:
           type: array
+          minItems: 1
           items:
-            $ref: '#/components/schemas/Rate'
+            $ref: '#/components/schemas/IDeaSRate'
         revenue:
           $ref: '#/components/schemas/Revenue'
         roomNumber:
           type: string
-          description: TODO
-          format: TODO
+          description: room number
         services:
           type: array
           items:
             $ref: '#/components/schemas/Service'
         sourceBookingCode:
           type: string
-          description: TODO
-          format: TODO
-    Profile:
+          description: source booking code
+    IDeaSProfile:
       type: object
+      required:
+        - id
+        - profileType
+        - name
       properties:
         id:
           type: string
-          description: TODO
-          format: TODO
+          description: id
         profileType:
           type: string
           enum:
             - GUEST
+            - CORPORATE
+            - TRAVEL_AGENT
             - COMPANY
             - AGENT
-          description: TODO
-          format: TODO
+            - GROUP
+            - WHOLESALER
+          description: type of profile
         context:
           type: string
-          description: TODO
-          format: TODO
+          description: profile context
         name:
           type: string
-          description: TODO
-          format: TODO
+          description: profile name
     StayRevenue:
       type: object
       properties:
@@ -300,25 +248,16 @@ components:
           type: array
           items:
             type: string
-          description: TODO
-          format: TODO
+          description: stay message ids
         summary:
           $ref: '#/components/schemas/Revenue'
     Service:
       type: object
-      required:
-        - serviceName
-        - serviceValue
-        - inclusive
-        - roomRevenuePackage
-        - reservationPackage
-        - startDate
-        - endDate
       properties:
         endDate:
           type: string
           format: date
-          description: TODO
+          description: end date of service
         inclusionType:
           type: string
           enum:
@@ -326,82 +265,54 @@ components:
             - SEPARATE
             - COMBINED
             - OTHER
-          description: TODO
-          format: TODO
+          description: inclusion type
         inclusive:
           type: boolean
-          description: TODO
-          format: TODO
+          description: is the service inclusive
         reservationPackage:
           type: boolean
-          description: TODO
-          format: TODO
+          description: reservation package
         roomRevenuePackage:
           type: boolean
-          description: TODO
-          format: TODO
+          description: room revenue package
         serviceName:
           type: string
-          description: TODO
-          format: TODO
+          description: name of service
         serviceValue:
           type: number
-          description: TODO
-          format: TODO
+          description: value of service
         startDate:
           type: string
           format: date
-          description: TODO
+          description: start date of service
     DailyRevenue:
       type: object
-      properties:
-        beverageRevenue:
-          type: number
-          description: TODO
-          format: TODO
-        foodRevenue:
-          type: number
-          description: TODO
-          format: TODO
-        otherRevenue:
-          type: number
-          description: TODO
-          format: TODO
-        roomRevenue:
-          type: number
-          description: TODO
-          format: TODO
-        totalRevenue:
-          type: number
-          description: TODO
-          format: TODO
-        transactionDate:
-          type: string
-          format: date
+      allOf:
+        - $ref: '#/components/schemas/Revenue'
+        - type: object
+          properties:
+            transactionDate:
+              type: string
+              format: date
     Revenue:
       type: object
       properties:
         beverageRevenue:
           type: number
-          description: TODO
-          format: TODO
+          description: beverage revenue
         foodRevenue:
           type: number
-          description: TODO
-          format: TODO
+          description: food revenue
         otherRevenue:
           type: number
-          description: TODO
-          format: TODO
+          description: other revenue
         roomRevenue:
           type: number
-          description: TODO
-          format: TODO
+          description: room revenue
         totalRevenue:
           type: number
-          description: TODO
-          format: TODO
-    Rate:
+          description: total
+    IDeaSRate:
       type: object
       required:
         - rateValue
@@ -410,34 +321,29 @@ components:
       properties:
         currencyExchangeId:
           type: string
-          description: TODO
-          format: TODO
+          description: currency exchange ID
         endDate:
           type: string
           format: date
-          description: TODO
+          description: end date
         grossRate:
           type: number
-          description: TODO
-          format: TODO
+          description: gross rate
         originalCurrencyCode:
           type: string
-          description: TODO
-          format: TODO
+          description: original currency code
+          format: TODO #TODO: what do currency codes look like, add validation?
         rateValue:
           type: number
-          description: TODO
-          format: TODO
+          description: rate value
         startDate:
           type: string
           format: date
-          description: TODO
-
+          description: start date
   examples:
     placeholderReservationExample:
       value:
-        - lastModifiedDate: "2022-01-01T12:23:34Z"
-          isPrimary: true
+        - primarySharer: true
           bookingDate: "2022-01-01T12:23:34Z"
           cancellationDate: "2022-01-01T12:23:44Z"
           cancellationId: "ABC123"
@@ -452,15 +358,13 @@ components:
           propertyCode: "SAND02CN"
           reservationId: "TEST_IDEAS_API_1"
           roomStays:
-            - analyticalMarketSegmentCode: "MS_AMS"
-              arrivalDate: "2022-08-20"
-              bookedAccomTypeCode: "bookedRT"
+            - arrivalDate: "2022-08-20"
+              bookedRoomTypeCode: "bookedRT"
               bookingType: "bkTy"
               currencyExchangeId: "1"
               departureDate: "2022-08-21"
-              fromPrimary: true
-              invBlockCode: "Grp1"
-              invTypeCode: "RT"
+              groupBlockCode: "Grp1"
+              roomTypeCode: "RT"
               marketCode: "MS"
               numberOfAdults: "1"
               numberOfChildren: "2"
@@ -517,10 +421,17 @@ components:
               otherRevenue: "777.45"
               roomRevenue: "777.55"
               totalRevenue: "777.65"
-          tempLookupId: "1001"
-          versionId: "2001"
 
   securitySchemes:
+    oAuth2ClientCredentialsStage:
+      type: oauth2
+      description: description
+      flows:
+        clientCredentials:
+          tokenUrl: https://fds.ideasrms.com/api/uis/internal_m2m/oauth2/token
+          scopes:
+            write: allows modifying resources
+            read: allows reading resources
     oAuth2ClientCredentials:
       type: oauth2
       description: description
@@ -532,6 +443,9 @@ components:
             read: allows reading resources
 
 security:
+  - oAuth2ClientCredentialsStage:
+      - read
+      - write
   - oAuth2ClientCredentials:
       - read
       - write

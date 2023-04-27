@@ -60,8 +60,6 @@ components:
               type: string
             marketSegmentCode:
               type: string
-            provided:
-              type: boolean
   examples:
     SampleRoomTypeMarketSegmentActivity:
       value:

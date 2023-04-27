@@ -39,9 +39,11 @@ components:
         - propertyCode
         - fiscalDate
         - occupancyDate
+        - arrivals
+        - departures
+        - cancellations
+        - roomRevenue
       properties:
-        id:
-          type: string
         arrivals:
           type: integer
           format: int32
@@ -52,9 +54,7 @@ components:
           type: string
         correlationId:
           type: string
-        createDate:
-          type: string
-          format: date-time
+          description: Unique per message
         departures:
           type: integer
           format: int32
@@ -84,3 +84,5 @@ components:
         totalRevenue:
           type: number
           format: double
+#          TODO: add otherRevenue (potentially room, food, beverage, telecom)
+#          TODO: add field timestamp or generatedDate with date-time
